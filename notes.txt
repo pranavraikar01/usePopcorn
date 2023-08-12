@@ -1,0 +1,71 @@
+//NOTE:Never call the  component inside the  same component itself then react wil go on an infinite loop
+//Prop drilling occurs due to lifting up state in which props are passed from one component to another even if the in between component doesnt require the prop then to it has to take it so as to pass the prop to its child .This problem can be solved using component composition
+//Using children in  composition is more used compared to element in composition
+
+
+//useEffect doesnt return anythinge
+eg:useEffect(function () {
+    fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=interstellar`)
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  },[]);
+  above fetch is the effect and [] is the dependencay array here the array is empty which implies that the effect will only run when app component is first time render
+
+
+//Whenever we are dealing with data fetching and ausing asyncronus function we should always see taht if any errors may occur in future
+
+
+//Effects only runs after browser paint wheras  render logic runs during render 
+eg:useEffect(function () {
+    console.log("After inital render");
+  }, []);
+  useEffect(function () {
+    console.log("After every render");
+  }, );
+  console.log("During render");
+  Thus output is:
+  During render
+  After inital render
+  After every render
+
+
+
+//Whenever there is a side effect we must use useEffect hook 
+eg:
+The title of our website changes according to our components then it is a side effect because we are dealing with the outside world thus we have to handle it with the useEffect hook
+
+//In order to clean up the side effect we use clean up function which runs on two different occasions:
+1 Before the effect is executed again
+2 After a component has unmounted
+we need cleanup function Whenever the side effect keeps happening after the component is re render or unmounted eg:HTTP request
+code eg:useEffect(
+    function () {
+      if (!title) return;
+      document.title = `Movie | ${title}`;
+      //below is the clean up function
+      return function () {
+        document.title = "usePopcorn";
+      };
+    },
+    [title]
+  );
+we can also handle race condition using cleanup function eg: the search bar in this project which continuously calls for api call for every letter we write
+
+////Watch The Rules of hooks in Practice video 162 section 13 custom hooks,Refs and more state  IMP
+
+//The way in whhich we can react to a key press event in the entire app is basically by simply attaching a event listener to the entire document key press is also a side effect thus we have to handle it in a useEffect function
+
+
+
+//steps to use useRef in a dom element happens in 3 steps:
+1.Create ref i.e eg:
+ const inputel=useRef(null) null is intial value
+
+2.Come to the element which we want to select then pass the ref we created in step 1 
+
+3.In order to use this ref we have to use the useEffect hook
+
+
+//Custom hooks are created in two situations:
+1.When we want to reuse some part of non visual logic
+2.WHen we want to extract a huge part from a component out into some custom hook 
